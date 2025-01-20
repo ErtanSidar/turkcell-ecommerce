@@ -1,4 +1,0 @@
-package com.turkcell.ecommerce.core.exception.detail;
-
-public class ValidationProblemDetails {
-}

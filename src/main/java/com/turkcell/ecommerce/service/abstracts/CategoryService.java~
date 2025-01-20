@@ -1,9 +1,0 @@
-package com.turkcell.ecommerce.service.abstracts;
-
-import com.turkcell.ecommerce.service.dtos.requests.categoryRequests.CreateCategoryRequest;
-
-public interface CategoryService {
-    void add(CreateCategoryRequest createCategoryRequest);
-
-    void delete(int id);
-}

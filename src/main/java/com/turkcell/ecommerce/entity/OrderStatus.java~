@@ -1,7 +1,0 @@
-package com.turkcell.ecommerce.entity;
-
-public enum OrderStatus {
-    PREPARING,
-    DELIVERING,
-    DELIVERED
-}
