@@ -1,0 +1,4 @@
+package com.turkcell.ecommerce.service.dtos.requests.userRequests;
+
+public class CreateUserRequest {
+}
