@@ -2,8 +2,8 @@ package com.turkcell.ecommerce.controller;
 
 import com.turkcell.ecommerce.entity.Product;
 import com.turkcell.ecommerce.service.abstracts.ProductService;
-import com.turkcell.ecommerce.service.dtos.requests.productRequests.CreateProductRequest;
-import com.turkcell.ecommerce.service.dtos.requests.productRequests.UpdateProductRequest;
+import com.turkcell.ecommerce.service.dtos.product.CreateProductRequest;
+import com.turkcell.ecommerce.service.dtos.product.UpdateProductRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,13 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public List<Product> findProducts(
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) Integer minStock
-    ) {
-        return productService.findProducts(category, minPrice, maxPrice, minStock);
+    public Product getById(@RequestParam int id) {
+        return productService.getById(id);
+    }
+
+    @GetMapping("/all")
+    public List<Product> getAll() {
+        return productService.getAll();
     }
 
     @PostMapping
@@ -33,7 +33,22 @@ public class ProductController {
     }
 
     @PutMapping
-    public void update(@RequestParam int id, @RequestBody @Valid UpdateProductRequest updateProductRequest) {
-        productService.update(id, updateProductRequest);
+    public void update(@RequestBody @Valid UpdateProductRequest updateProductRequest, @RequestParam int id) {
+        productService.update(updateProductRequest, id);
+    }
+
+    @DeleteMapping
+    public void delete(@RequestParam int id) {
+        productService.delete(id);
+    }
+
+    @GetMapping("/find")
+    public List<Product> findProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Integer minStock
+    ) {
+        return productService.findProducts(category, minPrice, maxPrice, minStock);
     }
 }

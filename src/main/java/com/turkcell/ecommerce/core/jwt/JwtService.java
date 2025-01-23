@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class JwtService
@@ -20,12 +22,13 @@ public class JwtService
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    public String generateToken(String username) {
+    public String generateToken(String email, Map<String,Object> extraClaims) {
         return Jwts
                 .builder()
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .subject(username)
+                .subject(email)
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .claims(extraClaims)
                 .signWith(getSignKey())
                 .compact();
     }
@@ -39,7 +42,7 @@ public class JwtService
                 .getPayload();
         return claims.getExpiration().after(new Date());
     }
-    public String extractUsername(String token)
+    public String extractEmail(String token)
     {
         Claims claims = Jwts
                 .parser()
@@ -49,8 +52,20 @@ public class JwtService
                 .getPayload();
         return claims.getSubject();
     }
+
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public List<String> extractRoles(String token)
+    {
+        Claims claims = Jwts
+                .parser()
+                .verifyWith((SecretKey) getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.get("roles", List.class);
     }
 }

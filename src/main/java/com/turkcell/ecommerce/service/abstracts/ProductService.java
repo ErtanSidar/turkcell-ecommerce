@@ -1,20 +1,18 @@
 package com.turkcell.ecommerce.service.abstracts;
 
 import com.turkcell.ecommerce.entity.Product;
-import com.turkcell.ecommerce.service.dtos.requests.productRequests.CreateProductRequest;
-import com.turkcell.ecommerce.service.dtos.requests.productRequests.UpdateProductRequest;
+import com.turkcell.ecommerce.service.dtos.product.CreateProductRequest;
+import com.turkcell.ecommerce.service.dtos.product.UpdateProductRequest;
 
 import java.util.List;
 
 public interface ProductService {
 
     Product getById(int id);
+    List<Product> getAll();
     void add(CreateProductRequest createProductRequest);
-    void update(int id, UpdateProductRequest updateProductRequest);
-
+    void update(UpdateProductRequest updateProductRequest, int id);
+    void delete(int id);
     List<Product> findProducts(String category, Double minPrice, Double maxPrice, Integer minStock);
 
-    void delete(int id);
-
-    void save(Product product);
 }

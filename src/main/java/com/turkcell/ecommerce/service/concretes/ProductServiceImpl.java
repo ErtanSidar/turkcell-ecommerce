@@ -4,8 +4,8 @@ import com.turkcell.ecommerce.entity.Category;
 import com.turkcell.ecommerce.entity.Product;
 import com.turkcell.ecommerce.repository.ProductRepository;
 import com.turkcell.ecommerce.service.abstracts.ProductService;
-import com.turkcell.ecommerce.service.dtos.requests.productRequests.CreateProductRequest;
-import com.turkcell.ecommerce.service.dtos.requests.productRequests.UpdateProductRequest;
+import com.turkcell.ecommerce.service.dtos.product.CreateProductRequest;
+import com.turkcell.ecommerce.service.dtos.product.UpdateProductRequest;
 import com.turkcell.ecommerce.service.rules.CategoryBusinessRules;
 import com.turkcell.ecommerce.service.rules.ProductBusinessRules;
 import java.util.Collections;
@@ -23,14 +23,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductBusinessRules productBusinessRules;
 
     @Override
-    public List<Product> findProducts(String category, Double minPrice, Double maxPrice, Integer minStock) {
-        return Collections.emptyList();
-    }
-
-
-    @Override
     public Product getById(int id) {
         return productRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Product> getAll() {
+        return productRepository.findAll();
     }
 
     @Override
@@ -54,8 +53,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void update(int id, UpdateProductRequest updateProductRequest) {
-
+    public void update(UpdateProductRequest updateProductRequest, int id) {
         productBusinessRules.productNameCannotBeDuplicated(id, updateProductRequest.getName());
 
         Product product = productRepository.findById(id).get();
@@ -72,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void save(Product product) {
-        productRepository.save(product);
+    public List<Product> findProducts(String category, Double minPrice, Double maxPrice, Integer minStock) {
+        return Collections.emptyList();
     }
 }

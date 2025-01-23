@@ -29,4 +29,13 @@ public class CategoryBusinessRules {
             throw new BusinessException(messageService.getMessage(Messages.BusinessErrors.CATEGORY_NOT_FOUND));
         }
     }
+
+    public void parentCategoryIdExists(int parentCategoryId) {
+        if (parentCategoryId != 0) {
+            Optional<Category> category = categoryRepository.findById(parentCategoryId);
+            if (!category.isPresent()) {
+                throw new BusinessException(messageService.getMessage(Messages.BusinessErrors.PARENT_CATEGORY_NOT_FOUND));
+            }
+        }
+    }
 }

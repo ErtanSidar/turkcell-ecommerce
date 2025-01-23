@@ -1,6 +1,6 @@
-package com.turkcell.ecommerce.service.dtos.requests.basketRequests;
+package com.turkcell.ecommerce.service.dtos.basket;
 
-import com.turkcell.ecommerce.entity.BasketDetail;
+import com.turkcell.ecommerce.service.dtos.BasketItemList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,5 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateBasketRequest {
-    private List<BasketDetail> basketDetails;
+    private int userId;
+    private List<BasketItemList> basketItems;
 }

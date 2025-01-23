@@ -5,11 +5,15 @@ import com.turkcell.ecommerce.core.jwt.JwtService;
 import com.turkcell.ecommerce.entity.User;
 import com.turkcell.ecommerce.repository.UserRepository;
 import com.turkcell.ecommerce.service.abstracts.UserService;
-import com.turkcell.ecommerce.service.dtos.requests.userRequests.LoginUserRequest;
+import com.turkcell.ecommerce.service.dtos.user.CreateUserRequest;
+import com.turkcell.ecommerce.service.dtos.user.LoginUserRequest;
 import com.turkcell.ecommerce.service.rules.UserBusinessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +25,20 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
 
     @Override
-    public void add(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    public User getById(int id) {
+        return userRepository.findById(id).get();
+    }
+
+    @Override
+    public void add(CreateUserRequest  createUserRequest) {
+
+        userBusinessRules.userEmailCannotBeDuplicated(createUserRequest.getEmail());
+
+        User user = new User();
+        user.setFirstName(createUserRequest.getFirstName());
+        user.setLastName(createUserRequest.getLastName());
+        user.setEmail(createUserRequest.getEmail());
+        user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
         userRepository.save(user);
     }
 
@@ -42,6 +58,8 @@ public class UserServiceImpl implements UserService {
         if(!isPasswordCorrect)
             throw new BusinessException("Invalid or wrong credentials.");
 
-        return this.jwtService.generateToken(dbUser.getEmail());
+        Map<String,Object> roles = new HashMap<>();
+        roles.put("roles", dbUser.getOperationClaims().stream().map(c->c.getName()).toList());
+        return this.jwtService.generateToken(dbUser.getEmail(), roles);
     }
 }

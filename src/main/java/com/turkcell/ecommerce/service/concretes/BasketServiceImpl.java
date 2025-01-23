@@ -1,48 +1,34 @@
 package com.turkcell.ecommerce.service.concretes;
 
-import com.turkcell.ecommerce.core.exception.type.BusinessException;
 import com.turkcell.ecommerce.entity.Basket;
-import com.turkcell.ecommerce.entity.BasketDetail;
 import com.turkcell.ecommerce.entity.Product;
+import com.turkcell.ecommerce.entity.User;
 import com.turkcell.ecommerce.repository.BasketRepository;
+import com.turkcell.ecommerce.service.abstracts.BasketItemService;
 import com.turkcell.ecommerce.service.abstracts.BasketService;
 import com.turkcell.ecommerce.service.abstracts.ProductService;
-import com.turkcell.ecommerce.service.dtos.requests.basketRequests.CreateBasketRequest;
+import com.turkcell.ecommerce.service.abstracts.UserService;
+import com.turkcell.ecommerce.service.dtos.basket.CreateBasketRequest;
+import com.turkcell.ecommerce.service.dtos.basket.UpdateBasketRequest;
+import com.turkcell.ecommerce.service.dtos.basketItem.CreateBasketItemRequest;
+import com.turkcell.ecommerce.service.rules.UserBusinessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class BasketServiceImpl implements BasketService {
 
     private final BasketRepository basketRepository;
+    private final BasketItemService basketItemService;
+    private final UserBusinessRules userBusinessRules;
     private final ProductService productService;
 
     @Override
-    public void add(CreateBasketRequest createBasketRequest) {
-
-        List<BasketDetail> basketDetails = createBasketRequest.getBasketDetails();
-        UUID uuid = UUID.randomUUID();
-        for (BasketDetail basketDetail : basketDetails) {
-            Product product = productService.getById(basketDetail.getProductId());
-            if (product.getStock() < basketDetail.getAmount()) {
-                throw new BusinessException("Ürün stoğu yetersiz.");
-            }
-
-            updateProductStock(product, basketDetail.getAmount());
-
-            Basket basket = new Basket();
-            basket.setBasketId(uuid);
-            basket.setName(product.getName());
-            basket.setPrice(product.getPrice());
-            basket.setAmount(basketDetail.getAmount());
-            basket.setTotalPrice(basketDetail.getAmount() * product.getPrice());
-            basketRepository.save(basket);
-        }
-
+    public Basket getById(int id) {
+        return basketRepository.findById(id).get();
     }
 
     @Override
@@ -51,12 +37,44 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public List<Basket> getAllByBasketId(UUID basketId) {
-        return basketRepository.findAllByBasketId(basketId);
+    public void add(CreateBasketRequest createBasketRequest) {
+
+        userBusinessRules.checkUserExists(createBasketRequest.getUserId());
+
+        int basketId = 0;
+
+        Basket basketByUserId = basketRepository.findBasketByUserId(createBasketRequest.getUserId());
+
+        if (basketByUserId != null) {
+            basketId = basketByUserId.getId();
+        } else {
+            Basket basket = new Basket();
+
+            User user = new User();
+            user.setId(createBasketRequest.getUserId());
+
+            basket.setUser(user);
+            Basket savedBasket = basketRepository.save(basket);
+            basketId = savedBasket.getId();
+        }
+
+        CreateBasketItemRequest createBasketItemRequest = new CreateBasketItemRequest();
+        createBasketItemRequest.setBasketId(basketId);
+        createBasketItemRequest.setBasketItems(createBasketRequest.getBasketItems());
+
+        basketItemService.add(createBasketItemRequest);
+
+
     }
 
-    private void updateProductStock(Product product, int amount) {
-        product.setStock(product.getStock() - amount);
-        productService.save(product);
+    @Override
+    public void update(UpdateBasketRequest updateBasketRequest, int id) {
+
     }
+
+    @Override
+    public void delete(int id) {
+        basketRepository.deleteById(id);
+    }
+
 }

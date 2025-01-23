@@ -1,8 +1,9 @@
 package com.turkcell.ecommerce.controller;
 
-import com.turkcell.ecommerce.entity.User;
 import com.turkcell.ecommerce.service.abstracts.UserService;
-import com.turkcell.ecommerce.service.dtos.requests.userRequests.LoginUserRequest;
+import com.turkcell.ecommerce.service.dtos.user.CreateUserRequest;
+import com.turkcell.ecommerce.service.dtos.user.LoginUserRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,8 @@ public class UserController {
 
 
     @PostMapping
-    public void add(@RequestBody User user) {
-        userService.add(user);
+    public void add(@RequestBody @Valid CreateUserRequest createUserRequest) {
+        userService.add(createUserRequest);
     }
 
     @PostMapping("login")

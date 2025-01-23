@@ -1,4 +1,4 @@
-package com.turkcell.ecommerce.service.dtos.requests.productRequests;
+package com.turkcell.ecommerce.service.dtos.product;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -6,22 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class CreateProductRequest {
-
+public class UpdateProductRequest {
     @Size(max = 50)
     private String name;
 
-    @Size(max = 500)
-    private String description;
-
-    @Min(value = 1)
+    @Min(value = 0, message = "Price must be greater than 0")
     private double price;
 
-    @Min(value = 0)
+    @Min(value = 0, message = "Stock quantity cannot be negative")
     private int stock;
-    private String imageUrl;
-    private int categoryId;
 }

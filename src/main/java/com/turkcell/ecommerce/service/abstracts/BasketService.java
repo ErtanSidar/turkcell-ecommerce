@@ -1,16 +1,16 @@
 package com.turkcell.ecommerce.service.abstracts;
 
 import com.turkcell.ecommerce.entity.Basket;
-import com.turkcell.ecommerce.service.dtos.requests.basketRequests.CreateBasketRequest;
+import com.turkcell.ecommerce.service.dtos.basket.CreateBasketRequest;
+import com.turkcell.ecommerce.service.dtos.basket.UpdateBasketRequest;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface BasketService {
 
-    void add(CreateBasketRequest createBasketRequest);
-
+    Basket getById(int id);
     List<Basket> getAll();
-
-    List<Basket> getAllByBasketId(UUID basketId);
+    void add(CreateBasketRequest createBasketRequest);
+    void update(UpdateBasketRequest updateBasketRequest, int id);
+    void delete(int id);
 }

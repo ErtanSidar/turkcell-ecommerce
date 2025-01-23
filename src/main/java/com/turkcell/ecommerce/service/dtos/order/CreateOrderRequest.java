@@ -1,4 +1,4 @@
-package com.turkcell.ecommerce.service.dtos.requests.orderRequests;
+package com.turkcell.ecommerce.service.dtos.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

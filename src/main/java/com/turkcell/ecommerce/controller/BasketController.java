@@ -2,7 +2,8 @@ package com.turkcell.ecommerce.controller;
 
 import com.turkcell.ecommerce.entity.Basket;
 import com.turkcell.ecommerce.service.abstracts.BasketService;
-import com.turkcell.ecommerce.service.dtos.requests.basketRequests.CreateBasketRequest;
+import com.turkcell.ecommerce.service.dtos.basket.CreateBasketRequest;
+import com.turkcell.ecommerce.service.dtos.basket.UpdateBasketRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +16,29 @@ public class BasketController {
 
     private final BasketService basketService;
 
+    @GetMapping
+    public Basket getById(@RequestParam int id) {
+        return basketService.getById(id);
+    }
+
+    @GetMapping("/all")
+    public List<Basket> getAll() {
+        return basketService.getAll();
+    }
+
     @PostMapping
     public void add(@RequestBody CreateBasketRequest createBasketRequest) {
         basketService.add(createBasketRequest);
     }
 
-    @GetMapping
-    public List<Basket> getAll() {
-        return basketService.getAll();
+    @PutMapping
+    public void update(@RequestBody UpdateBasketRequest updateBasketRequest, @RequestParam int id) {
+        basketService.update(updateBasketRequest, id);
+    }
+
+    @DeleteMapping
+    public void delete(@RequestParam int id) {
+        basketService.delete(id);
     }
 
 
