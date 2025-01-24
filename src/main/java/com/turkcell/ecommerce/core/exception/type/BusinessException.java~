@@ -1,4 +1,0 @@
-package com.turkcell.ecommerce.core.exception.type;
-
-public class BusinessException {
-}
