@@ -15,6 +15,6 @@ public class CreateCategoryRequest {
     @Size(max = 100)
     private String name;
 
-    private int parentCategoryId;
+    private int parentId;
 
 }

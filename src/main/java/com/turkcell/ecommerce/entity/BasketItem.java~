@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class BasketItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "basket_id", nullable = false)
@@ -23,5 +23,5 @@ public class BasketItem {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private Integer quantity;
+    private int quantity;
 }

@@ -37,18 +37,22 @@ public class CategoryServiceImpl implements CategoryService {
     public void add(CreateCategoryRequest createCategoryRequest) {
 
         categoryBusinessRules.categoryNameCannotBeDuplicated(createCategoryRequest.getName());
-        categoryBusinessRules.parentCategoryIdExists(createCategoryRequest.getParentCategoryId());
+        categoryBusinessRules.parentCategoryIdExists(createCategoryRequest.getParentId());
 
         Category category = new Category();
         category.setName(createCategoryRequest.getName());
-        category.setParentCategoryId(createCategoryRequest.getParentCategoryId());
+
+        Category parentCategory = new Category();
+        parentCategory.setId(createCategoryRequest.getParentId());
+
+        category.setParentCategory(parentCategory);
 
         categoryRepository.save(category);
     }
 
     @Override
     public void delete(int id) {
-        productBusinessRules.checkAssociatedWithAnyProduct(id);
+        categoryBusinessRules.checkcategoryAssociatedWithAnyProduct(id);
         categoryRepository.deleteById(id);
     }
 

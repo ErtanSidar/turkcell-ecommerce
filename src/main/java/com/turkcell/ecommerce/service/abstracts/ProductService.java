@@ -13,6 +13,7 @@ public interface ProductService {
     void add(CreateProductRequest createProductRequest);
     void update(UpdateProductRequest updateProductRequest, int id);
     void delete(int id);
-    List<Product> findProducts(String category, Double minPrice, Double maxPrice, Integer minStock);
+    List<Product> findProducts(Integer categoryId, Double minPrice, Double maxPrice, Boolean isIntock);
 
+    void updateProductQuantity(int productId, int quantity);
 }

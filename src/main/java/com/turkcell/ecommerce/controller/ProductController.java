@@ -44,11 +44,11 @@ public class ProductController {
 
     @GetMapping("/find")
     public List<Product> findProducts(
-            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) Integer minStock
+            @RequestParam(required = false) Boolean isInStock
     ) {
-        return productService.findProducts(category, minPrice, maxPrice, minStock);
+        return productService.findProducts(categoryId, minPrice, maxPrice, isInStock);
     }
 }

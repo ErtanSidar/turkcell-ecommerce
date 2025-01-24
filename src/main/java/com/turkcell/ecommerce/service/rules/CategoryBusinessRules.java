@@ -38,4 +38,14 @@ public class CategoryBusinessRules {
             }
         }
     }
+
+    public void checkcategoryAssociatedWithAnyProduct(int id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        if (category.isEmpty()) {
+            throw new BusinessException(messageService.getMessage(Messages.BusinessErrors.CATEGORY_NOT_FOUND));
+        }
+        if (!category.get().getProducts().isEmpty()) {
+            throw new BusinessException("There are products associated with the category.");
+        }
+    }
 }

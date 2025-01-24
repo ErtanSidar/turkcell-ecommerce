@@ -55,7 +55,7 @@ public class ProductBusinessRules {
     }
 
     public void checkProductAssociatedWithAnyOrder(int productId) {
-        val byProductId = orderItemRepository.findOrderItemByProductId(productId);
+        val byProductId = orderItemRepository.findByProductId(productId);
         if (byProductId != null) {
             throw new BusinessException("There are orders associated with the product.");
         }

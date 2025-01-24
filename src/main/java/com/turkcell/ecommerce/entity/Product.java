@@ -1,5 +1,6 @@
 package com.turkcell.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,5 +31,6 @@ public class Product {
 
     @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
     private Category category;
 }

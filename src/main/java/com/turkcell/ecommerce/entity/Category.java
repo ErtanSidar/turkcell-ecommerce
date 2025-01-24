@@ -1,5 +1,6 @@
 package com.turkcell.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,13 @@ public class Category {
 
     private String name;
 
-    private int parentCategoryId;
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    @JsonIgnore
+    private Category parentCategory;
+
+    @OneToMany(mappedBy = "parentCategory")
+    private List<Category> subCategories;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;

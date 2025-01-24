@@ -36,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
     public void add(CreateProductRequest createProductRequest) {
 
         categoryBusinessRules.categoryIdExists(createProductRequest.getCategoryId());
+        productBusinessRules.productNameCannotBeDuplicated(createProductRequest.getName());
 
         Product product = new Product();
         product.setName(createProductRequest.getName());
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void update(UpdateProductRequest updateProductRequest, int id) {
-        productBusinessRules.productNameCannotBeDuplicated(id, updateProductRequest.getName());
+        productBusinessRules.productNameCannotBeDuplicatedForUpdate(id, updateProductRequest.getName());
 
         Product product = productRepository.findById(id).get();
 
@@ -66,11 +67,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(int id) {
+        productBusinessRules.checkProductAssociatedWithAnyOrder(id);
         productRepository.deleteById(id);
     }
 
     @Override
-    public List<Product> findProducts(String category, Double minPrice, Double maxPrice, Integer minStock) {
-        return Collections.emptyList();
+    public List<Product> findProducts(Integer categoryId, Double minPrice, Double maxPrice, Boolean isIntock) {
+        return productRepository.filterProducts(categoryId, minPrice, maxPrice, isIntock);
+    }
+
+    @Override
+    public void updateProductQuantity(int productId, int quantity) {
+        Product product = productRepository.findById(productId).get();
+        product.setStock(product.getStock() - quantity);
+        productRepository.save(product);
     }
 }
